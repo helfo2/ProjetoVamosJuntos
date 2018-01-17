@@ -1,0 +1,57 @@
+.limited{
+	width: 980px;
+	margin: 0 auto;
+}
+.container{ 
+	background-color: #eee5de;
+	min-height: 500px;
+	padding: 20px;
+	border: #000 1px solid;
+	-webkit-box-shadow: 1px 0px 16px #000;
+	-moz-box-shadow: 1px 0px 16px #000;
+	box-shadow: 1px 0px 16px #000;
+	position: relative;
+	padding-top: 60px;
+	width: 940px;
+	margin-bottom: 40px;
+}
+#ckeditor{
+	width: 940px;
+	position: relative;
+}
+span.cke_skin_kama{
+	border: 0 !important;
+}
+
+.cke_skin_kama .cke_wrapper{
+	background-color: #9acd32 !important;
+}
+
+body{
+	background: url('../../images/bg.jpg') fixed;
+}
+
+h2{
+	margin-left: 6px;
+	color: #555;
+	font-size: 22px;
+	margin-bottom: 0px;
+}
+
+img{
+	width: 700px;
+	margin: 0 auto;
+	display: block;
+	margin-top: 20px;
+}
+
+input[type="submit"]{ right: 0; position: absolute; margin-right: 5px; font-family: 'Arial' sans-serif; font-size: 16px;  font-weight: bold; padding: 4px 8px; border-radius: 4px;  width: 140px; background-color: #9ACD32; color: #fff; border: 0px; }
+input[type="submit"]:hover{ background-color: #B3EE3A; border: 0px; }
+
+nav{ font-family: 'Arial' sans-serif; font-weight: bold; font-size: 20px; background: #a96b36; margin-top: -6px; width: 982px; position: absolute; top: 5px; left: -1px; }
+nav ul{  }
+nav li{ list-style: none; display: inline-block; margin: 0 10px; }
+nav li ul{ overflow: hidden; display: none; position: absolute; width: 170px; background: #a96b36; padding: 4px; margin-left: -50px; border: 2px solid #8f5429; border-top: 0; }
+nav li a{ cursor: pointer; color: #fff; text-decoration: none; }
+nav li a:hover, nav li a.ativo{ color: #bcc051; }
+li.sair{ position: absolute; right: 0; }

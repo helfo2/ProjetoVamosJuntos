@@ -1,0 +1,134 @@
+<?php
+	session_start();
+
+	ob_start(); // no servidor	
+	
+	if($_SESSION['login'] == null or $_SESSION['password'] == null) { // seguranca primaria
+		header('location: login.php');
+	} 
+	else {
+		$array = $_SESSION['tudo']; // todas as info do usuario
+		
+		require_once('model/clsConexaoBanco.php');
+		$db = new ConexaoBanco();
+		
+		if(isset($_GET)) {
+			$id_amigo = $_GET['id'];
+			
+			require_once('controller/clsUsuario.php');
+			$usuario_amigo = new Usuario();
+		
+			$usuario_amigo->ListarDadosUsuarioPorId($id_amigo);
+			$dados_amigo = $usuario_amigo->ExecutaListaUsuario();
+			
+			require_once('controller/clsImagem.php');
+			$img = new Imagem();
+			
+			$img->usuario_idusuario = $id_amigo;
+			
+			$img->ListarDadosImagem();
+			$imagem_amigo = $img->ExecutaListaImagem();
+			
+			if($imagem_amigo['imagem'] == '')
+				$imagem_bd = "images/perfil-branco.jpg";
+			else
+				$imagem_bd = "imagem-perfil.php?id=".$id_amigo;
+		}
+	}
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Vamos Juntos - Perfil de <?php echo $dados_amigo['nome']; ?></title>
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon" />
+    </head>
+    <body>
+        <div class="limited">
+
+            <?php include 'menu.php'; ?>
+
+
+            <div class="fotoPerfil" style="background: url('<?php echo $imagem_bd; ?>') center center no-repeat; background-size: 192%;"></div>
+            <?php
+                $num = rand(1,4);
+            ?>
+            <div>
+            <div class="dados" style="background: url('images/wall/0<?php echo $num; ?>.jpg') center center no-repeat; background-size: 100%;">
+                <label><?php echo $dados_amigo['nome']; ?></label>
+                <div id="star"></div>
+                <div id="dadosAmigo">
+                    <span>Idade: <?php echo $dados_amigo['idade']; ?></span>
+                    <span>Tipo: <?php echo $dados_amigo['tipo']; ?></span>
+                    <span>Bairro: <?php echo $dados_amigo['bairro']; ?></span>
+                    <?php $tipo = $dados_amigo['tipo']; if($tipo == 'motorista')
+                        echo '<span class="semBorda">Quantas caronas fiz: 10</span>';
+                        else echo '<span class="semBorda">Quantas caronas participei: 2</span>';
+                    ?>
+                </div>
+            </div></div>
+            <div class="container">
+                <?php
+					require_once('controller/clsPostagem.php');
+					$post = new Postagem();	
+					
+					$post->usuario_idusuario = $dados_amigo['idusuario'];
+					$post->ListarDadosPostagemPerfil();
+					$count_post = 0;
+					
+					$estilo = "background: url('".$imagem_bd."') center center no-repeat; background-size: 192%";
+					
+					$semaforo = "<div class=\"icones\">
+									<div class=\"nao\" title=\"Não\"></div>
+									<div class=\"talvez\" title=\"Talvez\"></div>
+									<div class=\"sim\" title=\"Sim\"></div>
+								</div>";								
+					
+					while($postagens = $post->ExecutaListaPostagemPerfil()) {						
+						if($postagens['Tipo'] == "c") {
+							echo "<div class=\"feedAmigo\">
+										<div class=\"miniFotoAmigo\" style=\"$estilo\"></div>
+										<a title=\"".$dados_amigo['nome']."\" href=\"perfil-amigo.php\">".$dados_amigo['nome']."</a>
+										<span>".ucfirst($postagens['post'])."</span>
+										$semaforo
+									</div>";
+						}
+						else if($postagens['Tipo'] == "s") {
+							echo "<div class=\"feedAmigo\">
+										<div class=\"miniFotoAmigo\" style=\"$estilo\"></div>
+										<a title=\"".$dados_amigo['nome']."\" href=\"perfil-amigo.php\">".$dados_amigo['nome']."</a>
+										<span>".ucfirst($postagens['post'])."</span>											
+									</div>";							
+						}
+						
+						$count_post++;
+						
+						if($count_post == 10) {
+							break;
+						}
+					}
+				?>                
+            </div>
+        </div>
+    </body>
+    <footer>
+        <span>&copy; Copyright 2013 - On Solutions</span>
+    </footer>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.raty.min.js"></script>
+    <script type="text/javascript">
+        $('#star').raty({ 
+            score: 5
+        });
+        $('.liMenu').mouseenter(function(){
+            $('.subMenu').stop().slideDown();
+        });
+        $('.liMenu').mouseleave(function(){
+            $('.subMenu').stop().slideUp();
+        });
+    </script>
+</html>
+
+<?php ob_flush(); // no servidor ?>
